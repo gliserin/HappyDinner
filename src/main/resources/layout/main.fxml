@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER"
+      prefHeight="800.0"
+      prefWidth="450.0"
+      xmlns="http://javafx.com/javafx/8.0.172-ea"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.odhs.happydinner.ui.MainController">
+
+    <Text fx:id="text_main_appName"/>
+
+    <ImageView fitHeight="76" fitWidth="270">
+        <VBox.margin>
+            <Insets top="30"/>
+        </VBox.margin>
+        <Image url="/drawable/aramark.jpg"/>
+    </ImageView>
+
+    <VBox alignment="TOP_CENTER">
+        <Text text="아침">
+            <font><Font size="30"/></font>
+        </Text>
+        <Text text="점심">
+            <font><Font size="30"/></font>
+        </Text>
+        <Text text="저녁">
+            <font><Font size="30"/></font>
+        </Text>
+    </VBox>
+
+
+
+</VBox>

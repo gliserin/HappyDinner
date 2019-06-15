@@ -16,7 +16,6 @@ public class DateManager {
 
     public DateManager() {
         cal.setTime(new Date());
-
     }
 
     public String getTodayDate() {
