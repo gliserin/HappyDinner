@@ -1,4 +1,4 @@
-package api;
+package org.odhs.happydinner.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

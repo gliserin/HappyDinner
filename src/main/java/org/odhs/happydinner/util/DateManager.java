@@ -1,4 +1,4 @@
-package util;
+package org.odhs.happydinner.util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

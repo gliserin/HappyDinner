@@ -1,4 +1,4 @@
-package model;
+package org.odhs.happydinner.model;
 
 import com.google.gson.annotations.SerializedName;
 

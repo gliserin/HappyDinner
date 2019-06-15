@@ -1,6 +1,6 @@
-package api;
+package org.odhs.happydinner.api;
 
-import model.DimiBob;
+import org.odhs.happydinner.model.DimiBob;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
