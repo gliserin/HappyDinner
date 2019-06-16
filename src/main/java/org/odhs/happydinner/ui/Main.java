@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.odhs.happydinner.res.Resource;
 
-import java.io.File;
-
 public class Main extends Application {
 
     public static void begin(String... args) {

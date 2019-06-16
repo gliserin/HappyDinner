@@ -12,3 +12,4 @@
 
 * retrofit2 2.5.0
 * retrofit2 converter-gson 2.5.0
+* javafx 11.0.2

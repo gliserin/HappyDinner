@@ -2,7 +2,9 @@ package org.odhs.happydinner.api;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import retrofit2.Retrofit;
+import org.odhs.happydinner.listener.ApiCallback;
+import retrofit2.*;
+
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiProvider {
@@ -21,5 +23,28 @@ public class ApiProvider {
                 .build();
 
         return retrofit.create(DimigoinApi.class);
+    }
+
+    public static <T> void execute(Call<T> call, ApiCallback<T> callback) {
+
+        Response<T> response;
+
+        try {
+            response = call.execute();
+            if(response.code() != 200) {
+                callback.onFail(new Throwable("Error Code : " + response.code()));
+                return;
+            }
+
+            if(response.body() != null) {
+                callback.onSuccess(response.body());
+            } else {
+                callback.onFail(new Throwable("I dont know about error."));
+            }
+
+        } catch(Throwable t) {
+            t.printStackTrace();
+            callback.onFail(t);
+        }
     }
 }

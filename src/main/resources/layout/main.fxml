@@ -15,27 +15,36 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="org.odhs.happydinner.ui.MainController">
 
-    <Text fx:id="text_main_appName"/>
-
-    <ImageView fitHeight="76" fitWidth="270">
-        <VBox.margin>
-            <Insets top="30"/>
-        </VBox.margin>
-        <Image url="/drawable/aramark.jpg"/>
-    </ImageView>
+    <Text text="Dummy Text" fx:id="text_appName"/>
 
     <VBox alignment="TOP_CENTER">
-        <Text text="아침">
+        <Text text="아침" fx:id="text_breakfast">
             <font><Font size="30"/></font>
         </Text>
-        <Text text="점심">
+
+        <Text fx:id="text_breakfast_content">
+            <font><Font size="20"/></font>
+        </Text>
+
+        <Text text="점심" fx:id="text_lunch">
             <font><Font size="30"/></font>
         </Text>
-        <Text text="저녁">
+
+        <Text fx:id="text_lunch_content">
+            <font><Font size="20"/></font>
+        </Text>
+
+        <Text text="저녁" fx:id="text_dinner">
             <font><Font size="30"/></font>
+        </Text>
+
+        <Text fx:id="text_dinner_content">
+            <font><Font size="20"/></font>
         </Text>
     </VBox>
 
-
+    <ImageView fitHeight="76" fitWidth="270">
+        <Image url="/drawable/aramark.jpg"/>
+    </ImageView>
 
 </VBox>
