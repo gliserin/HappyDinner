@@ -26,8 +26,10 @@ public class DateManager {
         return cal.getTime().toString();
     }
 
-
-
+//    public static String getDateFormat(String dateFormat, String date) {
+//        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+//
+//    }
 
     /* return list of 7 dates (Monday - Sunday) */
 

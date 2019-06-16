@@ -2,11 +2,12 @@ package org.odhs.happydinner.ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.odhs.happydinner.api.ApiProvider;
 import org.odhs.happydinner.listener.ApiCallback;
-import org.odhs.happydinner.listener.ThreadCallback;
 import org.odhs.happydinner.model.DimiBob;
 import org.odhs.happydinner.res.Resource;
 import org.odhs.happydinner.util.DateManager;
@@ -24,6 +25,7 @@ public class MainController implements Initializable {
     @FXML private Text text_breakfast_content;
     @FXML private Text text_lunch_content;
     @FXML private Text text_dinner_content;
+    @FXML private Text text_date;
     private Map<String, DimiBob> data = new HashMap<>();
     private int threadCounter;
 
@@ -37,24 +39,49 @@ public class MainController implements Initializable {
     @FXML
     private void setFont() {
 
-        Font font = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 30);
+        Font font_title = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 30);
+        Font font_appName = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 35);
+        Font font_content = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 20);
+        Font font_date = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 15);
 
         text_appName.setText(Resource.app_name);
-        text_appName.setFont(font);
+        text_appName.setFont(font_title);
 
-        text_breakfast.setFont(font);
-        text_lunch.setFont(font);
-        text_dinner.setFont(font);
+        text_breakfast.setFont(font_title);
+        text_lunch.setFont(font_title);
+        text_dinner.setFont(font_title);
 
-        text_breakfast_content.setFont(font);
-        text_lunch_content.setFont(font);
-        text_dinner_content.setFont(font);
+        text_breakfast_content.setFont(font_content);
+        text_lunch_content.setFont(font_content);
+        text_dinner_content.setFont(font_content);
 
+        text_date.setFont(font_date);
     }
 
     @FXML
     private void setMealContent(String date) {
+        DimiBob info = data.get(date);
+
         System.out.println(date);
+
+        if(info.breakfast==null) {
+            info.breakfast = "정보가 없습니다.";
+        }
+
+        if(info.lunch==null) {
+            info.lunch = "정보가 없습니다.";
+        }
+
+        if(info.dinner==null) {
+            info.lunch = "정보가 없습니다.";
+        }
+
+
+        text_breakfast_content.setText(info.breakfast);
+        text_lunch_content.setText(info.lunch);
+        text_dinner_content.setText(info.dinner);
+
+        text_date.setText(date);
     }
 
     private void loadMeal() {
@@ -71,26 +98,28 @@ public class MainController implements Initializable {
             String date = weekDays.get(i);
 
             threads.add(i, new Thread(
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            Call<DimiBob> call = ApiProvider.dimigoinApi().dimiBob(date);
-                            ApiProvider.execute(call, new ApiCallback<>() {
-                                @Override
-                                public void onSuccess(DimiBob value) {
+                    () -> {
+                        Call<DimiBob> call = ApiProvider.dimigoinApi().dimiBob(date);
+                        ApiProvider.execute(call, new ApiCallback<>() {
+                            @Override
+                            public void onSuccess(DimiBob value) {
 //                                    System.out.println(value);
-                                    data.put(value.date, value);
-                                }
 
-                                @Override
-                                public void onFail(Throwable t) {
-                                    t.printStackTrace();
-                                }
-                            });
-                            if(isLoadingFinish()) {
-                                setMealContent(dm.getTodayDate());
-//                                System.out.println("finish api 개수 : " + data.size());
+                                value.breakfast = value.breakfast.replace("/", " | ");
+                                value.lunch = value.lunch.replace("/", " | ");
+                                value.dinner = value.dinner.replace("/", " | ");
+
+                                data.put(date, value);
                             }
+
+                            @Override
+                            public void onFail(Throwable t) {
+                                t.printStackTrace();
+                            }
+                        });
+                        if(isLoadingFinish()) {
+                            setMealContent(dm.getTodayDate());
+//                                System.out.println("finish api 개수 : " + data.size());
                         }
                     }
             ));

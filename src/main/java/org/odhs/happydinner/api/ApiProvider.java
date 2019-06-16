@@ -26,11 +26,8 @@ public class ApiProvider {
     }
 
     public static <T> void execute(Call<T> call, ApiCallback<T> callback) {
-
-        Response<T> response;
-
         try {
-            response = call.execute();
+            Response<T> response = call.execute();
             if(response.code() != 200) {
                 callback.onFail(new Throwable("Error Code : " + response.code()));
                 return;
