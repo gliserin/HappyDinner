@@ -3,8 +3,6 @@ package org.odhs.happydinner.ui;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.odhs.happydinner.api.ApiProvider;
@@ -14,7 +12,6 @@ import org.odhs.happydinner.res.Resource;
 import org.odhs.happydinner.util.DateManager;
 import org.odhs.happydinner.util.NetManager;
 import retrofit2.Call;
-
 import java.net.URL;
 import java.util.*;
 
@@ -39,6 +36,7 @@ public class MainController implements Initializable {
     @FXML private Button button_sunday;
 
     private Map<String, DimiBob> data = new HashMap<>();
+    private List<String> weekDays;
     private int threadCounter;
 
     private DateManager dm;
@@ -47,9 +45,11 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dm = new DateManager();
+        weekDays = dm.getWeekDates();
 
         loadMeal();
         setFont();
+        setOnClick();
         System.out.println("initialize main.fxml");
     }
 
@@ -89,41 +89,78 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void setMealContent(String date) {
-        DimiBob info = data.get(date);
+    private void setOnClick() {
+        button_monday.setOnAction(event -> {
+            setMealContent(weekDays.get(0));
+        });
+        button_tuesday.setOnAction(event -> {
+            setMealContent(weekDays.get(1));
+        });
+        button_wednesday.setOnAction(event -> {
+            setMealContent(weekDays.get(2));
+        });
+        button_thursday.setOnAction(event -> {
+            setMealContent(weekDays.get(3));
+        });
+        button_friday.setOnAction(event -> {
+            setMealContent(weekDays.get(4));
+        });
+        button_saturday.setOnAction(event -> {
+            setMealContent(weekDays.get(5));
+        });
+        button_sunday.setOnAction(event -> {
+            setMealContent(weekDays.get(6));
+        });
+    }
 
-        if(info == null) {
+    @FXML
+    private void setMealContent(String date) {
+        DimiBob dimiBob = data.get(date);
+
+        String breakfast;
+        String lunch;
+        String dinner;
+        String info;
+
+        if(dimiBob == null) {
             System.out.println("ERROR Data is NULL");
             return;
         }
 
-        if(info.breakfast==null) {
-            info.breakfast = "정보가 없습니다.";
+        if(dimiBob.breakfast==null) {
+            breakfast = "정보가 없습니다.";
+        } else {
+            breakfast = dimiBob.breakfast.replace("/", " | ");
         }
 
-        if(info.lunch==null) {
-            info.lunch = "정보가 없습니다.";
+        if(dimiBob.lunch==null) {
+            lunch = "정보가 없습니다.";
+        } else {
+            lunch = dimiBob.lunch.replace("/", " | ");
         }
 
-        if(info.dinner==null) {
-            info.lunch = "정보가 없습니다.";
+        if(dimiBob.dinner==null) {
+            dinner = "정보가 없습니다.";
+        } else {
+            dinner = dimiBob.dinner.replace("/", " | ");
         }
 
-        if(info.date==null) {
-            info.date = "날짜가 없습니다.";
+        if(dimiBob.date==null) {
+            info = "날짜가 없습니다.";
         }
 
         try {
-            info.date = DateManager.changeDateFormat("yyyy-MM-dd", "yyyy년 MM월 dd일 급식정보입니다.", info.date);
+            info = DateManager.changeDateFormat("yyyy-MM-dd", "yyyy년 MM월 dd일 급식정보입니다.", dimiBob.date);
         } catch(Exception e) {
+            info = "오류";
             e.printStackTrace();
         }
 
-        text_breakfast_content.setText(info.breakfast);
-        text_lunch_content.setText(info.lunch);
-        text_dinner_content.setText(info.dinner);
+        text_breakfast_content.setText(breakfast);
+        text_lunch_content.setText(lunch);
+        text_dinner_content.setText(dinner);
 
-        text_notice.setText(info.date);
+        text_notice.setText(info);
     }
 
     @FXML
@@ -137,8 +174,6 @@ public class MainController implements Initializable {
             setErrorMessage("통신에 실패했습니다.");
             return;
         }
-
-        List<String> weekDays = dm.getWeekDates();
 
         List<Thread> threads = new ArrayList<>();
 
@@ -155,10 +190,6 @@ public class MainController implements Initializable {
                             @Override
                             public void onSuccess(DimiBob value) {
                                 System.out.println(value);
-                                value.breakfast = value.breakfast.replace("/", " | ");
-                                value.lunch = value.lunch.replace("/", " | ");
-                                value.dinner = value.dinner.replace("/", " | ");
-
                                 data.put(date, value);
                             }
 
