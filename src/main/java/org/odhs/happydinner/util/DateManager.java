@@ -1,5 +1,6 @@
 package org.odhs.happydinner.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,10 +27,13 @@ public class DateManager {
         return cal.getTime().toString();
     }
 
-//    public static String getDateFormat(String dateFormat, String date) {
-//        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
-//
-//    }
+    public static String changeDateFormat(String originalFormat, String newFormat, String date) throws Exception{
+        SimpleDateFormat of = new SimpleDateFormat(originalFormat);
+        SimpleDateFormat nf = new SimpleDateFormat(newFormat);
+
+        Date originalDate = of.parse(date);
+        return nf.format(originalDate);
+    }
 
     /* return list of 7 dates (Monday - Sunday) */
 

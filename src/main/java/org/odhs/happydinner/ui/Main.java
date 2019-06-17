@@ -21,6 +21,8 @@ public class Main extends Application {
 
         Scene scene = new Scene(root);
 
+        scene.getStylesheets().add(Resource.style);
+
         primaryStage.setTitle("Happy Dinner Arako");
         primaryStage.setScene(scene);
         primaryStage.getIcons().add(new Image(Resource.drawable_app_icon));

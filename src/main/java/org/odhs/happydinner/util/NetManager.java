@@ -12,7 +12,7 @@ public class NetManager {
             socket.connect(address, 1000);
             return true;
         } catch(Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             return false;
         }
     }

@@ -1,0 +1,11 @@
+.dayButton {
+
+}
+
+.mainBorderPane {
+    -fx-background-color: white;
+}
+
+.errorText {
+    -fx-text-fill: red;
+}
