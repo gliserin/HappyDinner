@@ -217,12 +217,6 @@
 
         <bottom>
             <VBox alignment="BOTTOM_CENTER">
-                <Text fx:id="text_errorMessage"
-                      styleClass="errorText">
-                    <VBox.margin>
-                        <Insets bottom="15"/>
-                    </VBox.margin>
-                </Text>
                 <ImageView fitHeight="76" fitWidth="270">
                     <Image url="/drawable/aramark.jpg"/>
                 </ImageView>

@@ -14,7 +14,6 @@ import org.odhs.happydinner.res.Resource;
 import org.odhs.happydinner.util.DateManager;
 import org.odhs.happydinner.util.NetManager;
 import retrofit2.Call;
-
 import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -42,8 +41,6 @@ public class MainController implements Initializable {
     private Text text_dinner_content;
     @FXML
     private Text text_notice;
-    @FXML
-    private Text text_errorMessage;
     @FXML
     private Text text_weekMeal;
     @FXML
@@ -85,11 +82,17 @@ public class MainController implements Initializable {
 
     private String displayingDate;
 
+    private boolean isRequesting = false;
+
+    private final String yellowBackgroundStyle = "-fx-background-color: yellow";
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         dm = new DateManager();
         weekDays = dm.getWeekDates();
+
+        data.put("", new DimiBob("정보가 없습니다.", "정보가 없습니다.", "정보가 없습니다.", "정보가 없습니다.", "정보가 없습니다."));
 
         loadMeal();
         setFont();
@@ -110,7 +113,6 @@ public class MainController implements Initializable {
         final Font font_content = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareR).toExternalForm(), 20);
         final Font font_notice = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 30);
         final Font font_button = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareR).toExternalForm(), 15);
-        final Font font_error = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareB).toExternalForm(), 30);
 
         final Font font_title2 = Font.loadFont(MainController.class.getResource(Resource.font_nanumSquareR).toExternalForm(), 20);
 
@@ -118,8 +120,6 @@ public class MainController implements Initializable {
 
         text_appName.setText(Resource.app_name);
         text_appName.setFont(font_appName);
-
-        text_errorMessage.setFont(font_error);
 
         text_breakfast.setFont(font_title);
         text_lunch.setFont(font_title);
@@ -155,24 +155,31 @@ public class MainController implements Initializable {
     private void setOnClick() {
         button_monday.setOnAction(event -> {
             setMealContent(weekDays.get(0));
+            setButtonStyle(0);
         });
         button_tuesday.setOnAction(event -> {
             setMealContent(weekDays.get(1));
+            setButtonStyle(1);
         });
         button_wednesday.setOnAction(event -> {
             setMealContent(weekDays.get(2));
+            setButtonStyle(2);
         });
         button_thursday.setOnAction(event -> {
             setMealContent(weekDays.get(3));
+            setButtonStyle(3);
         });
         button_friday.setOnAction(event -> {
             setMealContent(weekDays.get(4));
+            setButtonStyle(4);
         });
         button_saturday.setOnAction(event -> {
             setMealContent(weekDays.get(5));
+            setButtonStyle(5);
         });
         button_sunday.setOnAction(event -> {
             setMealContent(weekDays.get(6));
+            setButtonStyle(6);
         });
 
         button_copy.setOnAction(event -> {
@@ -201,13 +208,14 @@ public class MainController implements Initializable {
         });
 
         button_refresh.setOnAction(event -> {
-            text_breakfast_content.setText("");
-            text_lunch_content.setText("");
-            text_dinner_content.setText("");
-            text_notice.setText("로딩중...");
-            text_errorMessage.setText("");
+            if(!isRequesting) {
+                text_breakfast_content.setText("");
+                text_lunch_content.setText("");
+                text_dinner_content.setText("");
+                text_notice.setText("로딩중...");
 
-            loadMeal();
+                loadMeal();
+            }
         });
 
         button_search.setOnAction(this::onEnter);
@@ -221,6 +229,46 @@ public class MainController implements Initializable {
             Desktop.getDesktop().browse(uri);
         } catch (Throwable t) {
             t.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void setButtonStyle(int index) {
+
+        button_monday.setStyle("");
+        button_tuesday.setStyle("");
+        button_wednesday.setStyle("");
+        button_thursday.setStyle("");
+        button_friday.setStyle("");
+        button_saturday.setStyle("");
+        button_sunday.setStyle("");
+
+
+        switch(index) {
+            case 0:
+                button_monday.setStyle(yellowBackgroundStyle);
+                break;
+            case 1:
+                button_tuesday.setStyle(yellowBackgroundStyle);
+                break;
+            case 2:
+                button_wednesday.setStyle(yellowBackgroundStyle);
+                break;
+            case 3:
+                button_thursday.setStyle(yellowBackgroundStyle);
+                break;
+            case 4:
+                button_friday.setStyle(yellowBackgroundStyle);
+                break;
+            case 5:
+                button_saturday.setStyle(yellowBackgroundStyle);
+                break;
+            case 6:
+                button_sunday.setStyle(yellowBackgroundStyle);
+                break;
+            default:
+                System.out.println("Button Font Setting Fail");
+                break;
         }
     }
 
@@ -241,55 +289,50 @@ public class MainController implements Initializable {
         int setIndex = -2;
         String todayDate = dm.getTodayDate();
 
-        for(int i=0; i<weekDays.size(); i++) {
-            if(weekDays.get(i).equals(todayDate)) {
+        for (int i = 0; i < weekDays.size(); i++) {
+            if (weekDays.get(i).equals(todayDate)) {
                 todayIndex = i;
             }
-            if(weekDays.get(i).equals(date)) {
+            if (weekDays.get(i).equals(date)) {
                 setIndex = i;
             }
         }
 
-        if(todayIndex == setIndex) {
+        if (todayIndex == setIndex) {
             infoInsert = " 오늘";
-        } else if(todayIndex + 1 == setIndex) {
-            infoInsert = " 내일";
         } else {
             infoInsert = "";
         }
 
-        if (dimiBob == null) {
-            System.out.println("ERROR Data is NULL");
-            return;
+        try {
+            info = DateManager.changeDateFormat("yyyyMMdd", "yyyy년 MM월 dd일", dimiBob.date);
+        } catch (Exception e) {
+            info = "정보가 없습니다.";
+        }
+
+        text_notice.setText(info + infoInsert + " 급식 정보입니다.");
+
+
+
+        if(dimiBob == null) {
+            dimiBob = data.get("");
+//            System.out.println("ERROR Data is NULL");
         }
 
         breakfast = dimiBob.breakfast.replace("/", " | ");
         lunch = dimiBob.lunch.replace("/", " | ");
         dinner = dimiBob.dinner.replace("/", " | ");
 
-        try {
-            info = DateManager.changeDateFormat("yyyyMMdd", "yyyy년 MM월 dd일", dimiBob.date);
-        } catch (Exception e) {
-            info = "정보가 없습니다.";
-            e.printStackTrace();
-        }
-
         text_breakfast_content.setText(breakfast);
         text_lunch_content.setText(lunch);
         text_dinner_content.setText(dinner);
 
-        text_notice.setText(info + infoInsert + " 급식 정보입니다.");
-    }
-
-    @FXML
-    private void setErrorMessage(String message) {
-        text_errorMessage.setText(message);
     }
 
     private void loadMeal() {
 
         if (!NetManager.isConnect()) {
-            setErrorMessage("통신에 실패했습니다.");
+            text_notice.setText("통신에 실패했습니다.");
             return;
         }
 
@@ -304,6 +347,7 @@ public class MainController implements Initializable {
             threads.add(i, new Thread(
                     () -> {
                         Call<DimiBob> call = ApiProvider.dimigoinApi().dimiBob(date);
+
                         ApiProvider.execute(call, new ApiCallback<>() {
                             @Override
                             public void onSuccess(DimiBob value) {
@@ -313,7 +357,7 @@ public class MainController implements Initializable {
                                 }
 
                                 if (value.lunch == null) {
-                                    value.lunch = "정보가 없습니다";
+                                    value.lunch = "정보가 없습니다.";
                                 }
 
                                 if (value.dinner == null) {
@@ -321,11 +365,11 @@ public class MainController implements Initializable {
                                 }
 
                                 if (value.date == null) {
-                                    value.date = "날짜 정보가 없습니다.";
+                                    value.date = date;
                                 } else {
                                     try {
                                         value.date = DateManager.changeDateFormat("yyyy-MM-dd", "yyyyMMdd", value.date);
-                                    } catch(Throwable t) {
+                                    } catch (Throwable t) {
                                         t.printStackTrace();
                                     }
                                 }
@@ -336,12 +380,19 @@ public class MainController implements Initializable {
                             @Override
                             public void onFail(Throwable t) {
                                 t.printStackTrace();
-                                setErrorMessage("통신 실패");
-                                text_notice.setText("");
+                                data.put(date, new DimiBob("정보가 없습니다.", "정보가 없습니다.", "정보가 없습니다.", "정보가 없습니다.", date));
                             }
                         });
                         if (isLoadingFinish()) {
                             setMealContent(dm.getTodayDate());
+                            String today = dm.getTodayDate();
+                            int todayIndex = -1;
+                            for(int j=0; j<weekDays.size(); j++) {
+                                if(today.equals(weekDays.get(j))) {
+                                    todayIndex = j;
+                                }
+                            }
+                            setButtonStyle(todayIndex);
 //                                System.out.println("finish api 개수 : " + data.size());
                         }
                     }
