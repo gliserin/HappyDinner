@@ -6,6 +6,10 @@
     -fx-background-color: white;
 }
 
+.toolBox {
+    -fx-background-color: silver;
+}
+
 .errorText {
     -fx-text-fill: red;
 }

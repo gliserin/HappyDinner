@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<StackPane
-        prefHeight="800.0"
-        prefWidth="1300.0"
-        xmlns="http://javafx.com/javafx/8.0.172-ea"
-        xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="org.odhs.happydinner.ui.MainController">
+<?import javafx.scene.control.TextField?>
+<StackPane prefHeight="800.0"
+           prefWidth="1300.0"
+           xmlns="http://javafx.com/javafx/8.0.172-ea"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.odhs.happydinner.ui.MainController">
 
     <BorderPane styleClass="mainBorderPane">
 
         <padding>
-            <Insets top="10" right="30" left="30" bottom="10"/>
+            <Insets bottom="10" left="30" right="30" top="10"/>
         </padding>
 
         <top>
             <VBox alignment="TOP_CENTER">
-                <Text text="Dummy Text" fx:id="text_appName" fill="navy">
+                <Text fx:id="text_appName"
+                      fill="navy"
+                      text="Dummy Text">
                     <VBox.margin>
-                        <Insets top="20" bottom="30"/>
+                        <Insets bottom="30" top="20"/>
                     </VBox.margin>
                 </Text>
             </VBox>
@@ -38,9 +40,9 @@
         <center>
             <VBox>
                 <VBox>
-
                     <VBox alignment="TOP_CENTER">
-                        <Text text="로딩중..." fx:id="text_notice">
+                        <Text fx:id="text_notice"
+                              text="로딩중...">
                             <font>
                                 <Font size="25"/>
                             </font>
@@ -50,7 +52,8 @@
                         </Text>
                     </VBox>
 
-                    <Text text="아침" fx:id="text_breakfast">
+                    <Text fx:id="text_breakfast"
+                          text="아침">
                         <font>
                             <Font size="30"/>
                         </font>
@@ -70,7 +73,8 @@
                     </Text>
 
 
-                    <Text text="점심" fx:id="text_lunch">
+                    <Text fx:id="text_lunch"
+                          text="점심">
                         <font>
                             <Font size="30"/>
                         </font>
@@ -88,7 +92,8 @@
                         </VBox.margin>
                     </Text>
 
-                    <Text text="저녁" fx:id="text_dinner">
+                    <Text fx:id="text_dinner"
+                          text="저녁">
                         <font>
                             <Font size="30"/>
                         </font>
@@ -108,39 +113,112 @@
 
                 </VBox>
 
-                <HBox>
-                    <Button styleClass="dayButton"
-                            text="월"
-                            fx:id="button_monday"
-                            prefHeight="70"
-                            prefWidth="40">
+                <VBox maxWidth="700"
+                      styleClass="toolBox">
+                    <VBox.margin>
+                        <Insets left="30" top="50"/>
+                    </VBox.margin>
+                    <padding>
+                        <Insets topRightBottomLeft="20"/>
+                    </padding>
+                    <Text fx:id="text_weekMeal"
+                          text="이번 주 급식 보기">
+                        <VBox.margin>
+                            <Insets bottom="10"/>
+                        </VBox.margin>
+                        <font>
+                            <Font size="20"/>
+                        </font>
+                    </Text>
+                    <HBox>
+                        <VBox.margin>
+                            <Insets bottom="30"/>
+                        </VBox.margin>
+                        <Button fx:id="button_monday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="월"/>
+                        <Button fx:id="button_tuesday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="화"/>
+                        <Button fx:id="button_wednesday" prefHeight="35" prefWidth="40" styleClass="dayButton"
+                                text="수"/>
+                        <Button fx:id="button_thursday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="목"/>
+                        <Button fx:id="button_friday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="금"/>
+                        <Button fx:id="button_saturday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="토"/>
+                        <Button fx:id="button_sunday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="일"/>
+                    </HBox>
 
-                    </Button>
-                    <Button styleClass="dayButton" text="화" fx:id="button_tuesday">
+                    <HBox>
+                        <VBox>
+                            <Text fx:id="text_copy"
+                                  text="복사하기">
+                                <VBox.margin>
+                                    <Insets bottom="10"/>
+                                </VBox.margin>
+                                <font>
+                                    <Font size="20"/>
+                                </font>
+                            </Text>
 
-                    </Button>
-                    <Button styleClass="dayButton" text="수" fx:id="button_wednesday">
+                            <Button fx:id="button_copy"
+                                    prefHeight="30"
+                                    prefWidth="90"
+                                    text="복사하기"/>
+                        </VBox>
 
-                    </Button>
-                    <Button styleClass="dayButton" text="목" fx:id="button_thursday">
+                        <VBox>
+                            <HBox.margin>
+                                <Insets left="60"/>
+                            </HBox.margin>
+                            <Text fx:id="text_search"
+                                  text="이미지검색">
+                                <VBox.margin>
+                                    <Insets bottom="10"/>
+                                </VBox.margin>
+                                <font>
+                                    <Font size="20"/>
+                                </font>
+                            </Text>
 
-                    </Button>
-                    <Button styleClass="dayButton" text="금" fx:id="button_friday">
+                            <HBox alignment="CENTER_LEFT">
+                                <TextField prefHeight="30"
+                                           fx:id="textfield_search"
+                                           onAction="#onEnter"/>
+                                <Button text="검색"
+                                        prefHeight="30"
+                                        prefWidth="60"
+                                        fx:id="button_search">
+                                    <HBox.margin>
+                                        <Insets left="10"/>
+                                    </HBox.margin>
+                                </Button>
+                            </HBox>
+                        </VBox>
 
-                    </Button>
-                    <Button styleClass="dayButton" text="토" fx:id="button_saturday">
-
-                    </Button>
-                    <Button styleClass="dayButton" text="일" fx:id="button_sunday">
-
-                    </Button>
-                </HBox>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets left="60"/>
+                            </HBox.margin>
+                            <Text fx:id="text_refresh"
+                                  text="새로고침">
+                                <VBox.margin>
+                                    <Insets bottom="10"/>
+                                </VBox.margin>
+                                <font>
+                                    <Font size="20"/>
+                                </font>
+                            </Text>
+                            <Button text="새로고침"
+                                    prefHeight="30"
+                                    prefWidth="90"
+                                    fx:id="button_refresh"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
             </VBox>
         </center>
 
+
         <bottom>
             <VBox alignment="BOTTOM_CENTER">
-                <Text styleClass="errorText" fx:id="text_errorMessage">
+                <Text fx:id="text_errorMessage"
+                      styleClass="errorText">
                     <VBox.margin>
                         <Insets bottom="15"/>
                     </VBox.margin>
@@ -153,4 +231,3 @@
 
     </BorderPane>
 </StackPane>
-
