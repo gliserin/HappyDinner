@@ -112,7 +112,7 @@
                     </Text>
 
                 </VBox>
-
+                
                 <VBox maxWidth="700"
                       styleClass="toolBox">
                     <VBox.margin>

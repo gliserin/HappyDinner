@@ -185,7 +185,7 @@ public class MainController implements Initializable {
             String date;
 
             try {
-                date = DateManager.changeDateFormat("yyyy-MM-dd", "yyyy년 MM월 dd일", content.date);
+                date = DateManager.changeDateFormat("yyyyMMdd", "yyyy년 MM월 dd일", content.date);
             } catch (Throwable t) {
                 t.printStackTrace();
                 date = content.date;
@@ -235,6 +235,29 @@ public class MainController implements Initializable {
         String dinner;
         String info;
 
+        String infoInsert;
+
+        int todayIndex = -1;
+        int setIndex = -2;
+        String todayDate = dm.getTodayDate();
+
+        for(int i=0; i<weekDays.size(); i++) {
+            if(weekDays.get(i).equals(todayDate)) {
+                todayIndex = i;
+            }
+            if(weekDays.get(i).equals(date)) {
+                setIndex = i;
+            }
+        }
+
+        if(todayIndex == setIndex) {
+            infoInsert = " 오늘";
+        } else if(todayIndex + 1 == setIndex) {
+            infoInsert = " 내일";
+        } else {
+            infoInsert = "";
+        }
+
         if (dimiBob == null) {
             System.out.println("ERROR Data is NULL");
             return;
@@ -245,7 +268,7 @@ public class MainController implements Initializable {
         dinner = dimiBob.dinner.replace("/", " | ");
 
         try {
-            info = DateManager.changeDateFormat("yyyy-MM-dd", "yyyy년 MM월 dd일 급식 정보입니다.", dimiBob.date);
+            info = DateManager.changeDateFormat("yyyyMMdd", "yyyy년 MM월 dd일", dimiBob.date);
         } catch (Exception e) {
             info = "정보가 없습니다.";
             e.printStackTrace();
@@ -255,7 +278,7 @@ public class MainController implements Initializable {
         text_lunch_content.setText(lunch);
         text_dinner_content.setText(dinner);
 
-        text_notice.setText(info);
+        text_notice.setText(info + infoInsert + " 급식 정보입니다.");
     }
 
     @FXML
@@ -299,6 +322,12 @@ public class MainController implements Initializable {
 
                                 if (value.date == null) {
                                     value.date = "날짜 정보가 없습니다.";
+                                } else {
+                                    try {
+                                        value.date = DateManager.changeDateFormat("yyyy-MM-dd", "yyyyMMdd", value.date);
+                                    } catch(Throwable t) {
+                                        t.printStackTrace();
+                                    }
                                 }
 
                                 data.put(date, value);
