@@ -13,6 +13,7 @@ import org.odhs.happydinner.model.DimiBob;
 import org.odhs.happydinner.res.Resource;
 import org.odhs.happydinner.util.DateManager;
 import org.odhs.happydinner.util.NetManager;
+import org.odhs.happydinner.util.StringManager;
 import retrofit2.Call;
 import java.awt.Desktop;
 import java.awt.Toolkit;
@@ -86,7 +87,7 @@ public class MainController implements Initializable {
 
     private DateManager dm;
 
-    private String displayingDate;
+    private String displayingDate = "";
 
     private boolean isReverse = false;
 
@@ -233,19 +234,8 @@ public class MainController implements Initializable {
 
             StringBuilder sb;
             for(String content : contents) {
-                String[] arr = content.split("/");
-                for(int i=0; i<arr.length; i++) {
-                    char[] chars = arr[i].toCharArray();
-                    Arrays.sort(chars);
-                    arr[i] = new String(chars);
-                }
-
-                sb = new StringBuilder();
-                for(String s : arr) {
-                    sb.append(s).append(" | ");
-                }
-
-                results.add(sb.toString().substring(0, sb.toString().length()-3));
+                String result = StringManager.reverseString(content, "/", " | ");
+                results.add(result);
             }
 
             button_reverse.setText("되돌리기");
@@ -254,6 +244,8 @@ public class MainController implements Initializable {
             text_breakfast_content.setText(results.get(0));
             text_lunch_content.setText(results.get(1));
             text_dinner_content.setText(results.get(2));
+
+            text_notice.setText(StringManager.reverseString(text_notice.getText(), " " , " "));
         });
     }
 
