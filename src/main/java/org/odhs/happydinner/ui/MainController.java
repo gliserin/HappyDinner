@@ -49,6 +49,8 @@ public class MainController implements Initializable {
     private Text text_search;
     @FXML
     private Text text_refresh;
+    @FXML
+    private Text text_reverse;
 
     @FXML
     private Button button_monday;
@@ -70,21 +72,25 @@ public class MainController implements Initializable {
     private Button button_search;
     @FXML
     private Button button_refresh;
+    @FXML
+    private Button button_reverse;
 
     @FXML
     private TextField textfield_search;
 
     private Map<String, DimiBob> data = new HashMap<>();
+
     private List<String> weekDays;
+
     private int threadCounter;
 
     private DateManager dm;
 
     private String displayingDate;
 
-    private boolean isRequesting = false;
+    private boolean isReverse = false;
 
-    private final String yellowBackgroundStyle = "-fx-background-color: yellow";
+    private boolean isConnectFail = false;
 
 
     @Override
@@ -98,11 +104,6 @@ public class MainController implements Initializable {
         setFont();
         setOnClick();
         System.out.println("initialize main.fxml");
-    }
-
-    @FXML
-    private void setStyle() {
-
     }
 
     @FXML
@@ -135,6 +136,7 @@ public class MainController implements Initializable {
         text_copy.setFont(font_title2);
         text_search.setFont(font_title2);
         text_refresh.setFont(font_title2);
+        text_reverse.setFont(font_title2);
 
         button_monday.setFont(font_button);
         button_tuesday.setFont(font_button);
@@ -147,6 +149,8 @@ public class MainController implements Initializable {
         button_copy.setFont(font_button);
         button_search.setFont(font_button);
         button_refresh.setFont(font_button);
+
+        button_reverse.setFont(font_button);
 
         textfield_search.setFont(font_textfield);
     }
@@ -183,48 +187,81 @@ public class MainController implements Initializable {
         });
 
         button_copy.setOnAction(event -> {
-            DimiBob content = data.get(displayingDate);
 
-            if (content == null) {
+            if(isConnectFail) {
                 return;
             }
 
-            String date;
-
-            try {
-                date = DateManager.changeDateFormat("yyyyMMdd", "yyyy년 MM월 dd일", content.date);
-            } catch (Throwable t) {
-                t.printStackTrace();
-                date = content.date;
-            }
             StringSelection ss = new StringSelection(
-                    date + " 급식 정보입니다.\n\n" +
-                            "아침\n" + content.breakfast.replace("/", " | ") +
-                            "\n\n점심\n" + content.lunch.replace("/", " | ") +
-                            "\n\n저녁\n" + content.dinner.replace("/", " | ")
+                    text_notice.getText() + "\n\n" +
+                            "아침\n" + text_breakfast_content.getText() +
+                            "\n\n점심\n" + text_lunch_content.getText() +
+                            "\n\n저녁\n" + text_dinner_content.getText()
             );
             Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
             cb.setContents(ss, null);
         });
 
         button_refresh.setOnAction(event -> {
-            if(!isRequesting) {
-                text_breakfast_content.setText("");
-                text_lunch_content.setText("");
-                text_dinner_content.setText("");
-                text_notice.setText("로딩중...");
+            setButtonStyle(-1);
+            text_breakfast_content.setText("");
+            text_lunch_content.setText("");
+            text_dinner_content.setText("");
+            text_notice.setText("로딩중...");
 
-                loadMeal();
-            }
+            loadMeal();
+
         });
 
         button_search.setOnAction(this::onEnter);
+
+        button_reverse.setOnAction(event -> {
+
+            if(isReverse) {
+                setMealContent(displayingDate);
+                return;
+            }
+
+            DimiBob bob = data.get(displayingDate);
+
+            List<String> contents = new ArrayList<>();
+            List<String> results = new ArrayList<>();
+
+            contents.add(bob.breakfast);
+            contents.add(bob.lunch);
+            contents.add(bob.dinner);
+
+            StringBuilder sb;
+            for(String content : contents) {
+                String[] arr = content.split("/");
+                for(int i=0; i<arr.length; i++) {
+                    char[] chars = arr[i].toCharArray();
+                    Arrays.sort(chars);
+                    arr[i] = new String(chars);
+                }
+
+                sb = new StringBuilder();
+                for(String s : arr) {
+                    sb.append(s).append(" | ");
+                }
+
+                results.add(sb.toString().substring(0, sb.toString().length()-3));
+            }
+
+            button_reverse.setText("되돌리기");
+            isReverse = true;
+
+            text_breakfast_content.setText(results.get(0));
+            text_lunch_content.setText(results.get(1));
+            text_dinner_content.setText(results.get(2));
+        });
     }
 
     @FXML
     public void onEnter(ActionEvent e) {
         try {
             String text = textfield_search.getText();
+            text = text.replace(" ", "+");
             URI uri = new URI("http://www.google.com/search?q=" + text + "&tbm=isch");
             Desktop.getDesktop().browse(uri);
         } catch (Throwable t) {
@@ -243,6 +280,8 @@ public class MainController implements Initializable {
         button_saturday.setStyle("");
         button_sunday.setStyle("");
 
+
+        String yellowBackgroundStyle = "-fx-background-color: yellow";
 
         switch(index) {
             case 0:
@@ -267,13 +306,18 @@ public class MainController implements Initializable {
                 button_sunday.setStyle(yellowBackgroundStyle);
                 break;
             default:
-                System.out.println("Button Font Setting Fail");
                 break;
         }
     }
 
     @FXML
     private void setMealContent(String date) {
+
+        if(isReverse) {
+            button_reverse.setText("정렬하기");
+            isReverse = false;
+        }
+
         DimiBob dimiBob = data.get(date);
 
         displayingDate = date;
@@ -332,9 +376,12 @@ public class MainController implements Initializable {
     private void loadMeal() {
 
         if (!NetManager.isConnect()) {
+            isConnectFail = true;
             text_notice.setText("통신에 실패했습니다.");
             return;
         }
+
+        isConnectFail = false;
 
         List<Thread> threads = new ArrayList<>();
 

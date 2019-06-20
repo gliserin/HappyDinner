@@ -121,28 +121,51 @@
                     <padding>
                         <Insets topRightBottomLeft="20"/>
                     </padding>
-                    <Text fx:id="text_weekMeal"
-                          text="이번 주 급식 보기">
-                        <VBox.margin>
-                            <Insets bottom="10"/>
-                        </VBox.margin>
-                        <font>
-                            <Font size="20"/>
-                        </font>
-                    </Text>
                     <HBox>
-                        <VBox.margin>
-                            <Insets bottom="30"/>
-                        </VBox.margin>
-                        <Button fx:id="button_monday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="월"/>
-                        <Button fx:id="button_tuesday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="화"/>
-                        <Button fx:id="button_wednesday" prefHeight="35" prefWidth="40" styleClass="dayButton"
-                                text="수"/>
-                        <Button fx:id="button_thursday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="목"/>
-                        <Button fx:id="button_friday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="금"/>
-                        <Button fx:id="button_saturday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="토"/>
-                        <Button fx:id="button_sunday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="일"/>
+                        <VBox>
+                            <Text fx:id="text_weekMeal"
+                                  text="이번 주 급식 보기">
+                                <VBox.margin>
+                                    <Insets bottom="10"/>
+                                </VBox.margin>
+                                <font>
+                                    <Font size="20"/>
+                                </font>
+                            </Text>
+                            <HBox>
+                                <VBox.margin>
+                                    <Insets bottom="30"/>
+                                </VBox.margin>
+                                <Button fx:id="button_monday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="월"/>
+                                <Button fx:id="button_tuesday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="화"/>
+                                <Button fx:id="button_wednesday" prefHeight="35" prefWidth="40" styleClass="dayButton"
+                                        text="수"/>
+                                <Button fx:id="button_thursday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="목"/>
+                                <Button fx:id="button_friday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="금"/>
+                                <Button fx:id="button_saturday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="토"/>
+                                <Button fx:id="button_sunday" prefHeight="35" prefWidth="40" styleClass="dayButton" text="일"/>
+                            </HBox>
+                        </VBox>
+                        <VBox>
+                            <HBox.margin>
+                                <Insets left="60"/>
+                            </HBox.margin>
+                            <Text fx:id="text_reverse"
+                                  text="가나다순 정렬">
+                                <VBox.margin>
+                                    <Insets bottom="10"/>
+                                </VBox.margin>
+                                <font>
+                                    <Font size="20"/>
+                                </font>
+                            </Text>
+                            <Button fx:id="button_reverse"
+                                    prefHeight="35"
+                                    prefWidth="90"
+                                    text="정렬하기"/>
+                        </VBox>
                     </HBox>
+
 
                     <HBox>
                         <VBox>
