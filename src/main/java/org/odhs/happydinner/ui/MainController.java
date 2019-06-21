@@ -387,7 +387,7 @@ public class MainController implements Initializable {
                     () -> {
                         Call<DimiBob> call = ApiProvider.dimigoinApi().dimiBob(date);
 
-                        ApiProvider.execute(call, new ApiCallback<>() {
+                        ApiProvider.execute(call, new ApiCallback<DimiBob>() {
                             @Override
                             public void onSuccess(DimiBob value) {
 
